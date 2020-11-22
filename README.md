@@ -1,0 +1,2 @@
+# spot-mute
+A simple script to mute Spotify when an ad is playing. Requires python-pulsectl. `spot-mute.service` can be placed in ~/.config/systemd/user and enabled with `systemctl --user` to start at login; be sure to change the executable path if you use it.

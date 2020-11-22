@@ -1,0 +1,43 @@
+#!/usr/bin/python3
+import dbus
+from gi.repository import GLib
+from dbus.mainloop.glib import DBusGMainLoop
+import atexit
+import pulsectl
+import simpleaudio
+
+APP_NAME='Spotify'
+
+pulse = pulsectl.Pulse('spot-mute')
+
+def setMute(value):
+    for app in pulse.sink_input_list():
+        if app.name == APP_NAME:
+            pulse.mute(app, value)
+            break
+
+def onPropChange(self, dictionary, array):
+    try:
+        if dictionary['Metadata']['mpris:trackid'].startswith('spotify:ad'):
+            setMute(True)
+        else:
+            setMute(False)
+    except:
+        pass
+        
+def cleanup():
+    setMute(False)
+    pulse.close()
+    GLib.MainLoop().quit()
+
+DBusGMainLoop(set_as_default=True)
+bus = dbus.SessionBus()
+
+bus.add_signal_receiver(path='/org/mpris/MediaPlayer2', handler_function=onPropChange, dbus_interface='org.freedesktop.DBus.Properties', signal_name='PropertiesChanged')
+
+atexit.register(cleanup)
+
+try:
+    GLib.MainLoop().run()
+except:
+    pass

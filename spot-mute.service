@@ -1,0 +1,9 @@
+[Unit]
+Description=Mute Spotify Ads
+
+[Service]
+Type=exec
+ExecStart=/home/<user>/.local/bin/spot-mute
+
+[Install]
+WantedBy=default.target
