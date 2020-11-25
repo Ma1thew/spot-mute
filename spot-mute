@@ -6,15 +6,12 @@ import atexit
 import pulsectl
 import simpleaudio
 
-APP_NAME='Spotify'
+APP_NAMES = ['Spotify', 'Playback']
 
 pulse = pulsectl.Pulse('spot-mute')
 
 def setMute(value):
-    for app in pulse.sink_input_list():
-        if app.name == APP_NAME:
-            pulse.mute(app, value)
-            break
+    [ pulse.mute(x, value) for x in pulse.sink_input_list() if x.name in APP_NAMES ]
 
 def onPropChange(self, dictionary, array):
     try:
