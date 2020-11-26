@@ -4,6 +4,7 @@ from gi.repository import GLib
 from dbus.mainloop.glib import DBusGMainLoop
 import atexit
 import pulsectl
+import time
 
 APP_NAMES = ['Spotify', 'Playback']
 
@@ -17,6 +18,7 @@ def onPropChange(self, dictionary, array):
         if dictionary['Metadata']['mpris:trackid'].startswith('spotify:ad'):
             setMute(True)
         else:
+            time.sleep(1)
             setMute(False)
     except:
         pass
